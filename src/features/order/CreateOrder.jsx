@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Form, redirect, useActionData, useNavigation } from "react-router-dom";
 import store from "../../../store";
+import { createOrder } from "../../services/apiRestaurant";
 import Button from "../../ui/Button";
 import { formatCurrency } from "../../utils/helpers";
 import { clearCart, getCart, getTotalCartPrice } from "../cart/cartSlice";
@@ -15,6 +16,7 @@ const isValidPhone = (str) =>
   );
 
 function CreateOrder() {
+
   const {
     username,
     status: addressStatus,
@@ -78,19 +80,21 @@ function CreateOrder() {
               defaultValue={address}
             />
           </div>
-          <span className="absolute right-[3px] z-50">
-            <Button
-              onClick={(e) => {
-                e.preventDefault();
-                dispatch(fetchAddress());
-              }}
-              disabled={addressStatus === "loading"}
-              type="small"
-              className="h-10"
-            >
-              Get Position
-            </Button>
-          </span>
+          {!position.latitude && !position.longitude && (
+            <span className="absolute right-[3px] top-[3px] z-50 md:right-[5px] md:top-[5px]">
+              <Button
+                onClick={(e) => {
+                  e.preventDefault();
+                  dispatch(fetchAddress());
+                }}
+                disabled={addressStatus === "loading"}
+                type="small"
+                className="h-10"
+              >
+                Get Position
+              </Button>
+            </span>
+          )}
         </div>
         {addressStatus === "error" && (
           <p className="mb-3 mt-2 rounded-md bg-red-100 p-2 text-xs text-red-700">
@@ -153,7 +157,9 @@ export async function action({ request }) {
     return errors;
   }
 
-  const newOrder = await CreateOrder(order);
+  const newOrder = await createOrder(order);
+
+  // console.log(newOrder);
 
   store.dispatch(clearCart());
 

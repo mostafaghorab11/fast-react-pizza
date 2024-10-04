@@ -4,16 +4,6 @@ const initialState = {
   cart: [],
 };
 
-// cart: [
-//   {
-//     pizzaId: 1,
-//     pizzaName: "Chicken Ransh",
-//     unitPrice: 100,
-//     quantity: 2,
-//     totalPrice: 200,
-//   },
-// ];
-
 const cartSlice = createSlice({
   name: "cart",
   initialState,
